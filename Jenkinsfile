@@ -1,19 +1,18 @@
 pipeline {
 //None parameter in the agent section means that no global agent will be allocated for the entire Pipeline’s
 //execution and that each stage directive must specify its own agent section.
-    agent {
-        dockerfile true
-    } //none = every stage has own build agent
+    agent any //none = every stage has own build agent
     stages {
         stage('Build') {
             agent {
-                docker {
+                dockerfile true
+                //docker {
                     //You have to install 2 plugins: Docker plugin and Docker Pipeline
                     //This image parameter (of the agent section’s docker parameter) downloads the python:2-alpine
                     //Docker image and runs this image as a separate container. The Python container becomes
                     //the agent that Jenkins uses to run the Build stage of your Pipeline project.
                     //jenkins uses this image as node agent
-                    image 'python:3.9-alpine'
+                    //image 'python:3.9-alpine'
                 }
             }
             steps {
