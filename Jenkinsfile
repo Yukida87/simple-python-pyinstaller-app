@@ -1,7 +1,7 @@
 pipeline {
 //None parameter in the agent section means that no global agent will be allocated for the entire Pipeline’s
 //execution and that each stage directive must specify its own agent section.
-    agent any //none = every stage has own build agent
+    agent none //none = every stage has own build agent
     stages {
         stage('Build') {
             agent {
@@ -13,7 +13,7 @@ pipeline {
                     //the agent that Jenkins uses to run the Build stage of your Pipeline project.
                     //jenkins uses this image as node agent
                     //image 'python:3.9-alpine'
-                }
+
             }
             steps {
                 //This sh step runs the Python command to compile your application and
