@@ -1,11 +1,17 @@
-FROM a8543c528574
+FROM python:3.9-alpine AS build
 
-USER root
-RUN apt-get update \
-      && apt-get install -y sudo \
-      && rm -rf /var/lib/apt/lists/*
-RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
+WORKDIR /opt/python-gitlab
+COPY . .
+RUN python setup.py bdist_wheel
 
-USER DaniDr
-COPY plugins.txt /usr/share/jenkins/plugins.txt
-RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
+FROM python:3.9-alpine
+
+WORKDIR /opt/python-gitlab
+COPY --from=build /opt/python-gitlab/dist dist/
+RUN pip install PyYaml
+RUN pip install $(find dist -name *.whl) && \
+    rm -rf dist/
+COPY docker-entrypoint.sh /usr/local/bin/
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["--version"]
